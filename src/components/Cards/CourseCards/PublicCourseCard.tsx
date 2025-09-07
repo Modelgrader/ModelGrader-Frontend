@@ -10,7 +10,7 @@ const PublicCourseCard = ({ course }: { course: TopicModel }) => {
 
 	// Generate a course description or use a default one
 	const getCourseDescription = () => {
-		return `Explore ${course?.name} with comprehensive problems and exercises`;
+		return "";
 	};
 
 	// Generate course stats (you can enhance this with real data)

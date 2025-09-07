@@ -106,7 +106,7 @@ const SubmissionCard = ({
 						</Badge>
 						{total > 0 && (
 							<span className="text-sm text-muted-foreground">
-								{passed}/{total} tests
+								{passed}/{total}
 							</span>
 						)}
 					</div>
