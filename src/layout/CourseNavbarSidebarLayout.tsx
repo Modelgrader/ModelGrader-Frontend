@@ -35,7 +35,6 @@ const CourseNavbarSidebarLayout = ({
 	useEffect(() => {
 		TopicService.getPublicByAccount(accountId, String(courseId)).then(
 			(response) => {
-				console.log(response.data);
 				setCourse(response.data);
 			}
 		);

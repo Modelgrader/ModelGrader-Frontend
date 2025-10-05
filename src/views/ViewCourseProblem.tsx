@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProblemViewLayout, {
   OnSubmitProblemViewLayoutCallback,
@@ -9,10 +9,13 @@ import { SubmissionService } from "../services/Submission.service";
 import { ProblemPopulateCreatorSecureModel } from "../types/models/Problem.model";
 import { GetSubmissionByAccountProblemResponse } from "../types/models/Submission.model";
 import CourseLayout from "../layout/CourseLayout";
+import { CourseNavSidebarContext } from '@/contexts/CourseNavSidebarContext';
 
 const ViewCourseProblem = () => {
   const accountId = String(localStorage.getItem("account_id"));
   const { courseId, problemId } = useParams();
+
+  const { course } = useContext(CourseNavSidebarContext);
 
   const [problem, setProblem] = useState<ProblemPopulateCreatorSecureModel>();
   const [previousSubmissions, setPreviousSubmissions] =
@@ -70,6 +73,7 @@ const ViewCourseProblem = () => {
             previousSubmissions={
               previousSubmissions as GetSubmissionByAccountProblemResponse
             }
+            course={course}
           />
         </div>
       </CourseNavbarSidebarLayout>
