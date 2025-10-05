@@ -1,10 +1,9 @@
-import axios from "axios";
+import apiClient from "./index";
 import { GroupSerivceAPI } from "@/types/apis/Group.api";
-import { BASE_URL } from "../constants/BackendBaseURL";
 
 export const GroupService: GroupSerivceAPI = {
     get: async (groupId:string,query?:any) => {
-        const response = await axios.get(`${BASE_URL}/api/groups/${groupId}`,{
+        const response = await apiClient.get(`/api/groups/${groupId}`,{
             params: query
         })
 
@@ -12,7 +11,7 @@ export const GroupService: GroupSerivceAPI = {
     },
 
     getAllAsCreator: async (accountId:string,query?:any) => {
-        const response = await axios.get(`${BASE_URL}/api/accounts/${accountId}/groups`,{
+        const response = await apiClient.get(`/api/accounts/${accountId}/groups`,{
             params: query,
         })
 
@@ -20,25 +19,25 @@ export const GroupService: GroupSerivceAPI = {
     },
 
     create: async (accountId,request) => {
-        const response = await axios.post(`${BASE_URL}/api/accounts/${accountId}/groups`,request)
+        const response = await apiClient.post(`/api/accounts/${accountId}/groups`,request)
 
         return response;
     },
 
     update: async (groupId,request) => {
-        const response = await axios.put(`${BASE_URL}/api/groups/${groupId}`,request)
+        const response = await apiClient.put(`/api/groups/${groupId}`,request)
 
         return response;
     },
 
     delete: async (groupId) => {
-        const response = await axios.delete(`${BASE_URL}/api/groups/${groupId}`)
+        const response = await apiClient.delete(`/api/groups/${groupId}`)
 
         return response;
     },
 
     updateMembers: async (groupId,accountIds) => {
-        const response = await axios.put(`${BASE_URL}/api/groups/${groupId}/members/update`,{
+        const response = await apiClient.put(`/api/groups/${groupId}/members/update`,{
             account_ids: accountIds
         })
 
@@ -46,7 +45,7 @@ export const GroupService: GroupSerivceAPI = {
     },
 
     addMembers: async (groupId,accountIds) => {
-        const response = await axios.put(`${BASE_URL}/api/groups/${groupId}/members/add`,{
+        const response = await apiClient.put(`/api/groups/${groupId}/members/add`,{
             account_ids: accountIds
         })
 

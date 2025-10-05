@@ -1,43 +1,42 @@
-import axios from "axios";
-import { BASE_URL } from "../constants/BackendBaseURL";
+import apiClient from "./index";
 import { CollectionServiceAPI, GetCollectionByAccountResponse } from "@/types/apis/Collection.api";
 import { CollectionModel, CollectionPopulateCollectionProblemsPopulateProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupAndCollectionGroupPermissionsPopulateGroupModel } from "@/types/models/Collection.model";
 
 export const CollectionService: CollectionServiceAPI = {
     create: (accountId,request) => {
-        return axios.post<CollectionModel>(`${BASE_URL}/api/accounts/${accountId}/collections`,request);
+        return apiClient.post<CollectionModel>(`/api/accounts/${accountId}/collections`,request);
     },
 
     get: (collectionId,accountId) => {
-        return axios.get<CollectionPopulateCollectionProblemsPopulateProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupAndCollectionGroupPermissionsPopulateGroupModel>(`${BASE_URL}/api/accounts/${accountId}/collections/${collectionId}`);
+        return apiClient.get<CollectionPopulateCollectionProblemsPopulateProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupAndCollectionGroupPermissionsPopulateGroupModel>(`/api/accounts/${accountId}/collections/${collectionId}`);
     },
 
     getAllAsCreator: (accountId) => {
-        return axios.get<GetCollectionByAccountResponse>(`${BASE_URL}/api/accounts/${accountId}/collections`);
+        return apiClient.get<GetCollectionByAccountResponse>(`/api/accounts/${accountId}/collections`);
     },
 
     update: (collectionId,accountId,request) => {
-        return axios.put<CollectionModel>(`${BASE_URL}/api/accounts/${accountId}/collections/${collectionId}`,request);
+        return apiClient.put<CollectionModel>(`/api/accounts/${accountId}/collections/${collectionId}`,request);
     },
 
     delete: (collectionId,accountId) => {
-        return axios.delete<null>(`${BASE_URL}/api/accounts/${accountId}/collections/${collectionId}`);
+        return apiClient.delete<null>(`/api/accounts/${accountId}/collections/${collectionId}`);
     },
 
     addProblem: (collectionId,problemIds) => {
-        return axios.put<CollectionModel>(`${BASE_URL}/api/collections/${collectionId}/problems/add`,{problemIds});
+        return apiClient.put<CollectionModel>(`/api/collections/${collectionId}/problems/add`,{problemIds});
     },
 
     removeProblem: (collectionId,problemIds) => {
-        return axios.put(`${BASE_URL}/api/collections/${collectionId}/problems/remove`,{data:{problemIds}});
+        return apiClient.put(`/api/collections/${collectionId}/problems/remove`,{data:{problemIds}});
     },
 
     updateProblem: (collectionId,problemIds) => {
-        return axios.put<CollectionModel>(`${BASE_URL}/api/collections/${collectionId}/problems/update`,{problem_ids: problemIds});
+        return apiClient.put<CollectionModel>(`/api/collections/${collectionId}/problems/update`,{problem_ids: problemIds});
     },
 
     updateGroupPermissions: (collectionId,accountId,groups) => {
-        return axios.put<CollectionModel>(`${BASE_URL}/api/accounts/${accountId}/collections/${collectionId}/groups`,{groups});
+        return apiClient.put<CollectionModel>(`/api/accounts/${accountId}/collections/${collectionId}/groups`,{groups});
     }
     
 }
