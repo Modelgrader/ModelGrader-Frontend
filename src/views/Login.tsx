@@ -41,7 +41,7 @@ const Login = () => {
 			username,
 			password,
 		}).then((response) => {
-			if (response.status === 202) {
+			if (response.status < 400) {
 				const account = response.data;
 				localStorage.setItem("account_id", String(account.account_id));
 				localStorage.setItem("username", account.username);
