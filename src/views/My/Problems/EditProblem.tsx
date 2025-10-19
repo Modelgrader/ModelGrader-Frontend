@@ -10,6 +10,7 @@ import { transformCreateProblemRequestForm2CreateProblemRequest } from "@/types/
 import { transformProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel2CreateProblemRequestForm } from "@/types/adapters/Problem.adapter";
 import { CreateProblemRequestForm } from "@/types/forms/CreateProblemRequestForm";
 import { ProblemPoplulateCreatorModel } from "@/types/models/Problem.model";
+import ManageProblemLayout from "@/layout/ManageProblemLayout";
 
 const EditProblem = () => {
 	const accountId = String(localStorage.getItem("account_id"));
@@ -62,6 +63,7 @@ const EditProblem = () => {
 	}, [accountId, editProblemId]);
 	return (
 		<NavbarSidebarLayout>
+			<ManageProblemLayout isShow={true}>
 			{createRequest && (
 				<CreateProblemForm
 					createRequestInitialValue={createRequest}
@@ -79,6 +81,7 @@ const EditProblem = () => {
 					}
 				/>
 			)}
+			</ManageProblemLayout>
 		</NavbarSidebarLayout>
 	);
 };

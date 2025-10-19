@@ -5,6 +5,7 @@ import CreateProblemForm, {
 } from "../../../components/Forms/CreateProblemForm";
 import { toast } from "../../../components/shadcn/UseToast";
 import NavbarSidebarLayout from "../../../layout/NavbarSidebarLayout";
+import ManageProblemLayout from "../../../layout/ManageProblemLayout";
 import { ProblemService } from "@/services/Problem.service";
 import { transformCreateProblemRequestForm2CreateProblemRequest } from "@/types/adapters/CreateProblemRequestForm.adapter";
 import { CreateProblemRequestForm } from "@/types/forms/CreateProblemRequestForm";
@@ -58,12 +59,14 @@ const CreateProblem = () => {
 
 	return (
 		<NavbarSidebarLayout>
-			<CreateProblemForm
-				createRequestInitialValue={formInitialValue}
-				onProblemSave={(setLoading, createRequest) =>
-					handleSave(setLoading, createRequest)
-				}
-			/>
+			<ManageProblemLayout isShow={true}>
+				<CreateProblemForm
+					createRequestInitialValue={formInitialValue}
+					onProblemSave={(setLoading, createRequest) =>
+						handleSave(setLoading, createRequest)
+					}
+				/>
+			</ManageProblemLayout>
 		</NavbarSidebarLayout>
 	);
 };

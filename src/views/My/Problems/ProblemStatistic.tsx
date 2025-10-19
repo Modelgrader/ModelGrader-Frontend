@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import MyProblemSubmissionsTable from "../../../components/Tables/MyProblemSubmissionsTable";
 import { Button } from "../../../components/shadcn/Button";
 import NavbarSidebarLayout from "../../../layout/NavbarSidebarLayout";
+import ManageProblemLayout from "../../../layout/ManageProblemLayout";
 import { SubmissionService } from "@/services/Submission.service";
 import { ProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel } from "@/types/models/Problem.model";
 import { SubmissionPopulateSubmissionTestcaseAndAccountModel } from "@/types/models/Submission.model";
@@ -77,6 +78,7 @@ const ProblemStatistic = () => {
 
 	return (
 		<NavbarSidebarLayout>
+			<ManageProblemLayout isShow={true}>
 			<div className="mt-10 w-[96%] mx-auto">
 				<div className="font-bold text-3xl">{problem?.title}</div>
 
@@ -111,6 +113,7 @@ const ProblemStatistic = () => {
 					/>
 				</div>
 			</div>
+			</ManageProblemLayout>
 		</NavbarSidebarLayout>
 	);
 };

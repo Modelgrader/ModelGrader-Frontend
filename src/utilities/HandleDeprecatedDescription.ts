@@ -12,4 +12,4 @@ export function handleDeprecatedDescription(description: string): string{
 			},
 		]);
 	}
-};
+}
