@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card'
 import { Link, useParams } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, List, BarChart3, Pencil } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface ManageProblemLayoutProps {
     children: React.ReactNode;
@@ -13,9 +14,9 @@ const ManageProblemLayout = ({ children, isShow = false }: ManageProblemLayoutPr
     const { problemId } = useParams();
     
     return (
-        <div className={`${isShow ? 'grid gap-4 lg:gap-6 lg:grid-cols-4' : ''}`}>
+        <div className={cn({'grid gap-4 lg:gap-6 lg:grid-cols-4': isShow})}>
             {/* Main Content */}
-            <div className={isShow ? 'lg:col-span-3' : ''}>
+            <div className={cn({'lg:col-span-3': isShow})}>
                 {children}
             </div>
 
