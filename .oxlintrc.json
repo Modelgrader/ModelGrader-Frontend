@@ -1,0 +1,7 @@
+{
+  "plugins": ["react", "import"],
+  "env": {
+    "browser": true,
+    "es2020": true
+  }
+}
