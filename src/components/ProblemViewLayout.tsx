@@ -46,12 +46,9 @@ const ProblemViewLayout = ({
   previousSubmissions: GetSubmissionByAccountProblemResponse;
 }) => {
 
-  // const [problem, setProblem] = useState<ProblemPoplulateCreatorModel>();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("python");
   const [grading, setGrading] = useState<boolean>(false);
-  const [submitCodeValue, setSubmitCodeValue] = useState<string | undefined>(
-    ""
-  );
+  const [submitCodeValue, setSubmitCodeValue] = useState<string | undefined>("");
   const [copied, setCopied] = useState<boolean>(false);
 
   // const [previousSubmissions, setPreviousSubmissions] =
@@ -112,156 +109,183 @@ const ProblemViewLayout = ({
     }
   }, [problem]);
 
-  return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="flex xxl:mt-10 md:mt-5 h-[80vh] xl:h-[90vh]"
-    >
-      <ResizablePanel defaultSize={50} className="w-1/2 grid content-between">
-        <div className="ml-3 ">
-          <div className="text-3xl text-green-700 font-bold mb-2 flex">
-            
-            {problem?.title}
+  const problemPanel = (
+    <div className="grid content-between h-full">
+      <div className="ml-3">
+        <div className="text-3xl text-green-700 font-bold mb-2 flex">
+          {problem?.title}
+        </div>
+
+        <div className="flex text-base justify-between">
+          <div className="flex mr-10">
+            <b className="mr-2">Author</b>
+            <p className="">{problem?.creator.username}</p>
           </div>
 
-          <div className="flex text-base justify-between">
-            <div className="flex mr-10">
-              <b className="mr-2">Author</b>
-              <p className="">{problem?.creator.username}</p>
-            </div>
-
-            <div className="flex">
-              <b className="mr-2">Updated Date</b>
-              <p className="">
-                {readableDateFormat(String(problem?.updated_date))}
-              </p>
-            </div>
-
-            {/* <div className="flex">
-							<b className="mr-2">Difficulty</b>
-							<p className="">
-								<DifficultyBadge level={problem?.difficulty}/>
-							</p>
-						</div> */}
+          <div className="flex">
+            <b className="mr-2">Updated Date</b>
+            <p className="">
+              {readableDateFormat(String(problem?.updated_date))}
+            </p>
           </div>
         </div>
-        <div className="mt-[8px] mb-[16px]">
-          <Separator orientation="horizontal" />
+      </div>
+      <div className="mt-[8px] mb-[16px]">
+        <Separator orientation="horizontal" />
+      </div>
+      <div>
+        {problem && (
+          <ReadOnlyPlate
+            value={JSON.parse(
+              handleDeprecatedDescription(String(problem.description))
+            )}
+            className="h-[30vh] md:h-[35vh] lg:h-[65vh] xl:h-[75vh]"
+          />
+        )}
+      </div>
+    </div>
+  );
+
+  const editorPanel = (
+    <div className="mr-5 h-full flex flex-col">
+      <div className="flex justify-between mb-1 items-center">
+        <div className="flex gap-2">
+          <Combobox
+            label="Select Language"
+            options={ProgrammingLanguageOptions.filter((lang) =>
+              problem?.allowed_languages.includes(lang.value)
+            )}
+            onSelect={(value) => {
+              setSelectedLanguage(value);
+              localStorage.setItem("previousSelectedLanguage", value);
+            }}
+            value={selectedLanguage}
+            setValue={setSelectedLanguage}
+          />
         </div>
         <div>
-          {problem && (
-            <ReadOnlyPlate
-              value={JSON.parse(
-                handleDeprecatedDescription(String(problem.description))
-              )}
-              className="h-[65vh] xl:h-[75vh]"
+          {lastedSubmission && !grading && (
+            <TestcasesGradingIndicator
+              submissionTestcases={lastedSubmission.runtime_output}
             />
           )}
+          {grading && (
+            <div className="flex items-center">
+              <Loader2 className="animate-spin mr-2 text-green-400" />
+              Grading ...
+            </div>
+          )}
         </div>
-      </ResizablePanel>
-      {/* <div className="mx-3">
-				<Separator orientation="vertical" />
-			</div> */}
-      <ResizableHandle className="mx-3" />
-      <ResizablePanel defaultSize={50} className="w-1/2 mr-5">
-        <div className="flex justify-between mb-1 items-center">
-          <div className="flex gap-2">
-            <Combobox
-              label="Select Language"
-              options={ProgrammingLanguageOptions.filter((lang) =>
-                problem?.allowed_languages.includes(lang.value)
-              )}
-              onSelect={(value) => {
-                setSelectedLanguage(value);
-                localStorage.setItem("previousSelectedLanguage", value);
-              }}
-              // initialValue={selectedLanguage}
-              value={selectedLanguage}
-              setValue={setSelectedLanguage}
-            />
-          </div>
-          <div>
-            {lastedSubmission && !grading && (
-              <TestcasesGradingIndicator
-                submissionTestcases={lastedSubmission.runtime_output}
-              />
-            )}
-            {grading && (
-              <div className="flex items-center">
-                <Loader2 className="animate-spin mr-2 text-green-400" />
-                Grading ...
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="">
-          <MonacoEditorWrapper>
-            <MonacoEditor
-              onChange={(e) => setSubmitCodeValue(e)}
-              value={submitCodeValue}
-              theme="vs-dark"
-              // defaultLanguage="python"
-              language={selectedLanguage}
-            />
-          </MonacoEditorWrapper>
-        </div>
-
-        <div className="flex justify-between mt-1 gap-2">
-          <PreviousSubmissionsCombobox
-            bestSubmission={
-              previousSubmissions?.best_submission as SubmissionPopulateSubmissionTestcasesSecureModel
-            }
-            submissions={
-              previousSubmissions?.submissions as SubmissionPopulateSubmissionTestcasesSecureModel[]
-            }
-            onSelect={(submissionId) =>
-              handleSelectPreviousSubmission(String(submissionId))
-            }
+      </div>
+      <div className="flex-1 min-h-0">
+        <MonacoEditorWrapper>
+          <MonacoEditor
+            onChange={(e) => setSubmitCodeValue(e)}
+            value={submitCodeValue}
+            theme="vs-dark"
+            language={selectedLanguage}
           />
-          <Button variant="outline" onClick={handleOnClickCopy}>
-            {copied ? (
-              <>
-                <Check className="mr-2" size={16} />
-                Copied
-              </>
-            ) : (
-              <>
-                <Clipboard className="mr-2" size={16} />
-                Copy
-              </>
-            )}
-          </Button>
-          <Button
-            disabled={
-              grading ||
-              !submitCodeValue ||
-              ProgrammingLanguageOptions.filter((lang) =>
-                problem?.allowed_languages.includes(lang.value)
-              ).length === 0
-            }
-            onClick={handleSubmit}
-            className="px-10"
-          >
-            {grading ? (
-              <>
-                <Loader2 className="animate-spin mr-2" />
-                Submitting
-              </>
-            ) : (
-              <>Submit</>
-            )}
-          </Button>
-        </div>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+        </MonacoEditorWrapper>
+      </div>
+
+      <div className="flex justify-between mt-1 gap-2">
+        <PreviousSubmissionsCombobox
+          bestSubmission={
+            previousSubmissions?.best_submission as SubmissionPopulateSubmissionTestcasesSecureModel
+          }
+          submissions={
+            previousSubmissions?.submissions as SubmissionPopulateSubmissionTestcasesSecureModel[]
+          }
+          onSelect={(submissionId) =>
+            handleSelectPreviousSubmission(String(submissionId))
+          }
+        />
+        <Button variant="outline" onClick={handleOnClickCopy}>
+          {copied ? (
+            <>
+              <Check className="mr-2" size={16} />
+              Copied
+            </>
+          ) : (
+            <>
+              <Clipboard className="mr-2" size={16} />
+              Copy
+            </>
+          )}
+        </Button>
+        <Button
+          disabled={
+            grading ||
+            !submitCodeValue ||
+            ProgrammingLanguageOptions.filter((lang) =>
+              problem?.allowed_languages.includes(lang.value)
+            ).length === 0
+          }
+          onClick={handleSubmit}
+          className="px-10"
+        >
+          {grading ? (
+            <>
+              <Loader2 className="animate-spin mr-2" />
+              Submitting
+            </>
+          ) : (
+            <>Submit</>
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <>
+      {/* Desktop (lg+): side-by-side horizontal layout */}
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="hidden lg:flex xxl:mt-10 lg:mt-5 h-[80vh] xl:h-[90vh]"
+      >
+        <ResizablePanel defaultSize={50} className="w-1/2">
+          {problemPanel}
+        </ResizablePanel>
+        <ResizableHandle className="mx-3" />
+        <ResizablePanel defaultSize={50} className="w-1/2">
+          {editorPanel}
+        </ResizablePanel>
+      </ResizablePanelGroup>
+
+      {/* Tablet / iPad (< lg): stacked vertical layout — problem top, editor bottom */}
+      <ResizablePanelGroup
+        direction="vertical"
+        className="lg:hidden flex mt-3 h-[92vh]"
+      >
+        <ResizablePanel defaultSize={38} minSize={20} className="overflow-auto pb-2">
+          {problemPanel}
+        </ResizablePanel>
+        <ResizableHandle className="my-2" />
+        <ResizablePanel defaultSize={62} minSize={30} className="overflow-auto">
+          {editorPanel}
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </>
   );
 };
 
 const MonacoEditorWrapper = styled.div`
-  height: 80vh;
+  height: 100%;
+  min-height: 200px;
 
-  @media (max-height: 900px) {
-    height: 75vh;
+  /* Desktop heights */
+  @media (min-width: 1024px) {
+    height: 80vh;
+
+    @media (max-height: 900px) {
+      height: 75vh;
+    }
+  }
+
+  /* Tablet heights — fill the resizable panel */
+  @media (max-width: 1023px) {
+    height: 45vh;
   }
 `;
 
