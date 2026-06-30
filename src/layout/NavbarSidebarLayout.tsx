@@ -11,13 +11,13 @@ const NavbarSidebarLayout = ({ children }: { children: React.ReactNode }) => {
 		<NavbarMenuLayout xPad={false} yPad={false}>
 			{
 				isLogin ? (
-					<div className="flex">
-				<NavSidebar />
-				<div>
-					<Separator orientation="vertical" className="" />
-				</div>
-				<div className="w-full pt-10">{children}</div>
-			</div>
+					<div className="flex h-full overflow-hidden">
+						<NavSidebar />
+						<div>
+							<Separator orientation="vertical" className="" />
+						</div>
+						<div className="flex-1 pt-10 overflow-hidden">{children}</div>
+					</div>
 				) : (
 					<p>No Access</p>
 				)

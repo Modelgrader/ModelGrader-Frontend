@@ -1,4 +1,3 @@
-import { ELEMENT_PARAGRAPH } from "@udecode/plate-paragraph";
 import { useNavigate } from "react-router-dom";
 import CreateProblemForm, {
 	OnProblemSaveCallback,
@@ -11,13 +10,7 @@ import { CreateProblemRequestForm } from "@/types/forms/CreateProblemRequestForm
 
 const formInitialValue: CreateProblemRequestForm = {
 	title: "",
-	description: [
-		{
-			id: "1",
-			type: ELEMENT_PARAGRAPH,
-			children: [{ text: "" }],
-		},
-	],
+	description: { mode: "plate", content: [] },
 	language: "python",
 	solution: "",
 	testcases: "",

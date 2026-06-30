@@ -1,11 +1,24 @@
 import { handleDeprecatedDescription } from "@/utilities/HandleDeprecatedDescription";
-import { CreateProblemRequestForm } from "../forms/CreateProblemRequestForm";
+import { CreateProblemRequestForm, ProblemDescription } from "../forms/CreateProblemRequestForm";
 import { ProblemHashedTable, ProblemModel, ProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel, ProblemPopulateTestcases } from "../models/Problem.model";
 
 export function transformProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel2CreateProblemRequestForm(problem: ProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel): CreateProblemRequestForm {
+    const rawDescription = String(problem.description);
+    const parsedDescription: ProblemDescription = (() => {
+        try {
+            const parsed = JSON.parse(rawDescription);
+            if (parsed && typeof parsed === "object" && "mode" in parsed) {
+                return parsed as ProblemDescription;
+            }
+            return { mode: "plate", content: JSON.parse(handleDeprecatedDescription(rawDescription)) };
+        } catch {
+            return { mode: "markdown", content: rawDescription };
+        }
+    })();
+
     return {
         title: problem.title,
-        description: JSON.parse(handleDeprecatedDescription(String(problem.description))),
+        description: parsedDescription,
         language: problem.language,
         solution: problem.solution,
         testcases: problem.testcases.map(testcase => testcase.input).join(":::\n"),

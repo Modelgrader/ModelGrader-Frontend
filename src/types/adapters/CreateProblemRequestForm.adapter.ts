@@ -12,7 +12,10 @@ export const transformCreateProblemRequestForm2CreateProblemRequest = (
 	const request = {
 		title: createRequest.title,
 		language: createRequest.language,
-		description: JSON.stringify(createRequest.description),
+		description: createRequest.description.mode === "markdown"
+			? createRequest.description.content
+			: JSON.stringify(createRequest.description.content),
+		description_mode: createRequest.description.mode,
 		solution: createRequest.solution,
 		testcases: testcaseParse(
 			createRequest.testcases,

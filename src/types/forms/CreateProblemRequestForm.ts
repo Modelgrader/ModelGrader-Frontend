@@ -8,9 +8,15 @@ export type ProblemGroupPermissionRequestForm = {
 	group: GroupModel
 } & ProblemPermissionRequestForm
 
+export type DescriptionMode = "markdown" | "plate";
+
+export type ProblemDescription =
+	| { mode: "markdown"; content: string }
+	| { mode: "plate"; content: PlateEditorValueType };
+
 export type CreateProblemRequestForm = {
 	title: string;
-	description: PlateEditorValueType;
+	description: ProblemDescription;
 	language: string;
 	solution: string;
 	testcases: string;

@@ -11,11 +11,11 @@ export const NavbarMenuLayout = ({
     xPad?: boolean;
 }) => {
     return (
-        <div>
+        <div className="h-screen overflow-hidden flex flex-col">
             <div className="z-50 fixed w-full">
                 <NavigationBar />
             </div>
-            <div className={(yPad ? 'pt-10' : '') + ' ' + (xPad ? 'pl-10' : '')}>{children}</div>
+            <div className={`flex-1 overflow-hidden ${yPad ? 'pt-10' : ''} ${xPad ? 'pl-10' : ''}`}>{children}</div>
         </div>
     );
 };
