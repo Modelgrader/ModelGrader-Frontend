@@ -25,21 +25,13 @@ const ProfileDropdown = ({ children }: { children: ReactNode }) => {
 
 	const username = localStorage.getItem("username");
 	const account_id = String(localStorage.getItem("account_id"));
-	const token = localStorage.getItem("token");
 
 	const handleLogout = async () => {
-		if (!token) {
-			return;
-		}
-
-		const { status } = await AuthService.logout({ account_id, token });
-
-		if (status === 200) {
-			localStorage.removeItem("account_id");
-			localStorage.removeItem("username");
-			localStorage.removeItem("token");
-			window.location.reload();
-		}
+		localStorage.removeItem("account_id");
+		localStorage.removeItem("username");
+		localStorage.removeItem("access_token");
+		localStorage.removeItem("refresh_token");
+		window.location.href = "/login";
 	};
 
 	return (

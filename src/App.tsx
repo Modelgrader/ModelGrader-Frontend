@@ -16,23 +16,37 @@ function App() {
   const [isOpenNavSidebar, setIsOpenNavSidebar] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const account_id = String(localStorage.getItem("account_id"));
+    const accessToken = localStorage.getItem("access_token");
+    const accountId = localStorage.getItem("account_id");
 
-    if (!token || !account_id) {
+    if (!accessToken || !accountId) {
       setIsLogin(false);
       return;
     }
 
-    AuthService.authorize({ token, account_id }).then((response) => {
-      if (response.data.result) {
+    try {
+      const payload = JSON.parse(atob(accessToken.split(".")[1]));
+      const isExpired = payload.exp * 1000 < Date.now();
+      if (!isExpired) {
         setIsLogin(true);
-      } else {
-        setIsLogin(false);
-        localStorage.removeItem("token");
-        localStorage.removeItem("account_id");
-        localStorage.removeItem("username");
+        return;
       }
+    } catch {
+      // malformed token — fall through to refresh
+    }
+
+    const refreshToken = localStorage.getItem("refresh_token");
+    if (!refreshToken) {
+      setIsLogin(false);
+      return;
+    }
+
+    AuthService.refreshToken(refreshToken).then((response) => {
+      localStorage.setItem("access_token", response.data.access_token);
+      setIsLogin(true);
+    }).catch(() => {
+      localStorage.clear();
+      setIsLogin(false);
     });
   }, []);
 

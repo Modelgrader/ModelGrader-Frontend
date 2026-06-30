@@ -17,12 +17,11 @@ const GoogleAuthCallback = () => {
         }
 
         handleGoogleCallback(code, state)
-            .then((account) => {
-                localStorage.setItem("account_id", String(account.account_id));
-                localStorage.setItem("username", account.username);
-                if (account.token) {
-                    localStorage.setItem("token", account.token);
-                }
+            .then((data: any) => {
+                localStorage.setItem("account_id", String(data.account_id));
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("access_token", data.access_token);
+                localStorage.setItem("refresh_token", data.refresh_token);
                 window.location.href = "/dashboard";
             })
             .catch((err) => {

@@ -42,12 +42,11 @@ const Login = () => {
 			password,
 		}).then((response) => {
 			if (response.status < 400) {
-				const account = response.data;
-				localStorage.setItem("account_id", String(account.account_id));
-				localStorage.setItem("username", account.username);
-				if (account.token) {
-					localStorage.setItem("token", account.token);
-				}
+				const data = response.data as any;
+				localStorage.setItem("account_id", String(data.account_id));
+				localStorage.setItem("username", data.username);
+				localStorage.setItem("access_token", data.access_token);
+				localStorage.setItem("refresh_token", data.refresh_token);
 				window.location.href = "/dashboard";
 			}
 			setLoading(false);

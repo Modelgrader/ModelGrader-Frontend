@@ -1,37 +1,74 @@
 import axios from "axios";
 
-// Create axios instance with base URL from environment
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
 });
 
-// Request interceptor to automatically add authorization header
-apiClient.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+apiClient.interceptors.request.use((config) => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
+    return config;
+});
 
-// Response interceptor to handle token expiration
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (v: string) => void; reject: (e: unknown) => void }> = [];
+
+function processQueue(error: unknown, token: string | null) {
+    failedQueue.forEach(({ resolve, reject }) => {
+        if (error) reject(error);
+        else resolve(token!);
+    });
+    failedQueue = [];
+}
+
 apiClient.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    (error) => {
-        if (error.response?.status === 401) {
-            // Token expired or invalid, clear it from localStorage
-            localStorage.removeItem('token');
-            // Optionally redirect to login page
-            window.location.href = '/login';
+    (response) => response,
+    async (error) => {
+        const original = error.config;
+
+        if (error.response?.status !== 401 || original._retry) {
+            return Promise.reject(error);
         }
-        return Promise.reject(error);
+
+        const refreshToken = localStorage.getItem("refresh_token");
+        if (!refreshToken) {
+            localStorage.clear();
+            window.location.href = "/login";
+            return Promise.reject(error);
+        }
+
+        if (isRefreshing) {
+            return new Promise((resolve, reject) => {
+                failedQueue.push({ resolve, reject });
+            }).then((token) => {
+                original.headers.Authorization = `Bearer ${token}`;
+                return apiClient(original);
+            });
+        }
+
+        original._retry = true;
+        isRefreshing = true;
+
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_BACKEND_URL}/api/auth/token/refresh`,
+                { refresh_token: refreshToken }
+            );
+            const newAccessToken: string = res.data.access_token;
+            localStorage.setItem("access_token", newAccessToken);
+            processQueue(null, newAccessToken);
+            original.headers.Authorization = `Bearer ${newAccessToken}`;
+            return apiClient(original);
+        } catch (refreshError) {
+            processQueue(refreshError, null);
+            localStorage.clear();
+            window.location.href = "/login";
+            return Promise.reject(refreshError);
+        } finally {
+            isRefreshing = false;
+        }
     }
 );
 

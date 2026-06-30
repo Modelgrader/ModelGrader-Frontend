@@ -17,6 +17,10 @@ export const AuthService: AuthServiceAPI = {
     authorize: async (request) => {
         const response = await apiClient.put<AuthenticationResultResponse>('/api/token', request);
         return response;
-    }
+    },
 
+    refreshToken: async (refreshToken: string) => {
+        const response = await apiClient.post<{ access_token: string }>('/api/auth/token/refresh', { refresh_token: refreshToken });
+        return response;
+    }
 }
