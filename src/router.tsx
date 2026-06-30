@@ -25,6 +25,7 @@ import Register from './views/Register';
 import ViewCourse from './views/ViewCourse';
 import ViewCourseProblem from './views/ViewCourseProblem';
 import ViewProblem from './views/ViewProblem';
+import GoogleAuthCallback from './views/GoogleAuthCallback';
 
 const Router = () => {
     // const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Router = () => {
             <Route path="/courses" element={<ExploreCourses />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/auth/google/callback" element={<GoogleAuthCallback />} />
 
             {isLogin !== null && !isLogin && <Route path="/*" element={<Login />} />}
 
