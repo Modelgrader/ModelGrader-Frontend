@@ -19,8 +19,8 @@ export const AuthService: AuthServiceAPI = {
         return response;
     },
 
-    refreshToken: async (refreshToken: string) => {
-        const response = await apiClient.post<{ access_token: string }>('/api/auth/token/refresh', { refresh_token: refreshToken });
+    refreshToken: async () => {
+        const response = await apiClient.post<{ access_token: string }>('/api/auth/token/refresh');
         return response;
     }
 }

@@ -18,13 +18,11 @@ import {
 	Users,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { AuthService } from "@/services/Auth.service";
 
 const ProfileDropdown = ({ children }: { children: ReactNode }) => {
 	const navigate = useNavigate();
 
 	const username = localStorage.getItem("username");
-	const account_id = String(localStorage.getItem("account_id"));
 
 	const handleLogout = async () => {
 		localStorage.removeItem("account_id");

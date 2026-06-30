@@ -21,7 +21,7 @@ const GoogleAuthCallback = () => {
                 localStorage.setItem("account_id", String(data.account_id));
                 localStorage.setItem("username", data.username);
                 localStorage.setItem("access_token", data.access_token);
-                localStorage.setItem("refresh_token", data.refresh_token);
+                // refresh_token อยู่ใน httpOnly cookie แล้ว ไม่ต้องเก็บใน localStorage
                 window.location.href = "/dashboard";
             })
             .catch((err) => {

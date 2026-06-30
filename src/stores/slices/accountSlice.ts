@@ -20,8 +20,8 @@ export const accountSlice = createSlice({
 	reducers: {
 		loadAccountFromLocal: (state: AccountState) => {
 			state.username = localStorage.getItem("username") || "";
-			state.accessToken = localStorage.getItem("token") || null;
-			state.refreshToken = localStorage.getItem("refreshToken") || null;
+			state.accessToken = localStorage.getItem("access_token") || null;
+			state.refreshToken = null; // refresh token อยู่ใน httpOnly cookie แล้ว
 			state.expiresAt = localStorage.getItem("expiresAt") || null;
 		},
 		setAccount: (state: AccountState, action) => {

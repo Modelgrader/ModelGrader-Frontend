@@ -35,13 +35,8 @@ function App() {
       // malformed token — fall through to refresh
     }
 
-    const refreshToken = localStorage.getItem("refresh_token");
-    if (!refreshToken) {
-      setIsLogin(false);
-      return;
-    }
-
-    AuthService.refreshToken(refreshToken).then((response) => {
+    // access token หมดอายุ — ลอง refresh ผ่าน httpOnly cookie อัตโนมัติ
+    AuthService.refreshToken().then((response) => {
       localStorage.setItem("access_token", response.data.access_token);
       setIsLogin(true);
     }).catch(() => {

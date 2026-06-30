@@ -21,5 +21,5 @@ export type AuthServiceAPI = {
     login: (request: LoginRequest) => Promise<AxiosResponse<AccountModel>>;
     logout: (request: LogoutRequest) => Promise<AxiosResponse<AccountModel>>;
     authorize: (request: AuthorizationRequest) => Promise<AxiosResponse<AuthenticationResultResponse>>;
-    refreshToken: (refreshToken: string) => Promise<AxiosResponse<{ access_token: string }>>;
+    refreshToken: () => Promise<AxiosResponse<{ access_token: string }>>;
 }

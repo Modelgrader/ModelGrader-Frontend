@@ -2,6 +2,7 @@ import axios from "axios";
 
 const apiClient = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_URL,
+    withCredentials: true,
 });
 
 apiClient.interceptors.request.use((config) => {
@@ -32,13 +33,6 @@ apiClient.interceptors.response.use(
             return Promise.reject(error);
         }
 
-        const refreshToken = localStorage.getItem("refresh_token");
-        if (!refreshToken) {
-            localStorage.clear();
-            window.location.href = "/login";
-            return Promise.reject(error);
-        }
-
         if (isRefreshing) {
             return new Promise((resolve, reject) => {
                 failedQueue.push({ resolve, reject });
@@ -52,10 +46,8 @@ apiClient.interceptors.response.use(
         isRefreshing = true;
 
         try {
-            const res = await axios.post(
-                `${import.meta.env.VITE_BACKEND_URL}/api/auth/token/refresh`,
-                { refresh_token: refreshToken }
-            );
+            // ไม่ต้องส่ง refresh_token ใน body — browser ส่ง httpOnly cookie อัตโนมัติ
+            const res = await apiClient.post("/api/auth/token/refresh");
             const newAccessToken: string = res.data.access_token;
             localStorage.setItem("access_token", newAccessToken);
             processQueue(null, newAccessToken);
