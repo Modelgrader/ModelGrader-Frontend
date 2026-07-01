@@ -17,6 +17,45 @@ import { Button } from './shadcn/Button';
 import { Combobox } from './shadcn/Combobox';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from './shadcn/Resizable';
 import { Separator } from './shadcn/Seperator';
+import MDEditor from '@uiw/react-md-editor';
+import { PDFViewer } from '@embedpdf/react-pdf-viewer';
+
+const PDF_DISABLED_CATEGORIES = [
+    'document-open',
+    'document-close',
+    'document-print',
+    'document-protect',
+    'annotation',
+    'annotation-shape',
+    'insert',
+    'form',
+    'redaction',
+    'comment',
+];
+
+const PDFViewerAutoResize = ({ src }: { src: string }) => {
+    const ref = React.useRef<HTMLDivElement>(null);
+    const [height, setHeight] = useState(500);
+    React.useEffect(() => {
+        const el = ref.current;
+        if (!el) return;
+        const ro = new ResizeObserver((entries) => {
+            const h = entries[0]?.contentRect.height;
+            if (h > 0) setHeight(h);
+        });
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
+    return (
+        <div ref={ref} style={{ height: '100%' }}>
+            <PDFViewer
+                key={src}
+                config={{ src, disabledCategories: PDF_DISABLED_CATEGORIES }}
+                style={{ width: '100%', height: `${height}px` }}
+            />
+        </div>
+    );
+};
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -55,6 +94,7 @@ const ProblemViewLayout = ({
     // const [previousSubmissions, setPreviousSubmissions] =
     useState<GetSubmissionByAccountProblemResponse>();
     const [lastedSubmission, setLastedSubmission] = useState<SubmissionPopulateSubmissionTestcasesSecureModel>();
+    const [pdfPresignedUrl, setPdfPresignedUrl] = useState<string | null>(problem?.pdf_presigned_url ?? null);
 
     const handleSubmit = () => {
         onSubmit({
@@ -104,6 +144,9 @@ const ProblemViewLayout = ({
                 )[0].value;
                 setSelectedLanguage(autoSelectedLanguage);
             }
+        }
+        if (problem?.view_mode === 'pdf') {
+            setPdfPresignedUrl(problem.pdf_presigned_url ?? null);
         }
     }, [problem]);
 
@@ -161,12 +204,32 @@ const ProblemViewLayout = ({
                 <div className="mt-[8px] mb-[16px]">
                     <Separator orientation="horizontal" />
                 </div>
-                <div>
-                    {problem && (
+                <div className="flex-1 overflow-auto">
+                    {problem && problem.view_mode === 'markdown' && (
+                        <div data-color-mode="dark">
+                            <MDEditor.Markdown
+                                source={String(problem.description)}
+                                style={{ background: 'transparent', padding: '8px 0' }}
+                            />
+                        </div>
+                    )}
+                    {problem && (problem.view_mode === 'plate' || !problem.view_mode) && (
                         <ReadOnlyPlate
                             value={JSON.parse(handleDeprecatedDescription(String(problem.description)))}
                             className="h-[65vh] xl:h-[75vh]"
                         />
+                    )}
+                    {problem && problem.view_mode === 'pdf' && (
+                        <div className="h-[65vh] xl:h-[75vh]">
+                            {pdfPresignedUrl ? (
+                                <PDFViewerAutoResize src={pdfPresignedUrl} />
+                            ) : (
+                                <div className="flex items-center gap-2 text-muted-foreground text-sm p-4">
+                                    <Loader2 size={16} className="animate-spin" />
+                                    กำลังโหลด PDF...
+                                </div>
+                            )}
+                        </div>
                     )}
                 </div>
             </ResizablePanel>

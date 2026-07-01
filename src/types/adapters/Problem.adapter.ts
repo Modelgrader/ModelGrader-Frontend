@@ -3,22 +3,30 @@ import { CreateProblemRequestForm, ProblemDescription } from "../forms/CreatePro
 import { ProblemHashedTable, ProblemModel, ProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel, ProblemPopulateTestcases } from "../models/Problem.model";
 
 export function transformProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel2CreateProblemRequestForm(problem: ProblemPopulateAccountAndTestcasesAndProblemGroupPermissionsPopulateGroupModel): CreateProblemRequestForm {
-    const rawDescription = String(problem.description);
-    const parsedDescription: ProblemDescription = (() => {
+    const rawDescription = String(problem.description ?? "");
+    const viewMode = problem.view_mode ?? "plate";
+
+    const baseDescription: ProblemDescription = {
+        mode: viewMode,
+        markdown: "",
+        plate: [],
+        pdf: problem.pdf_url ?? null,
+        pdfPreviewUrl: problem.pdf_presigned_url ?? null,
+    };
+
+    if (viewMode === "markdown") {
+        baseDescription.markdown = rawDescription;
+    } else if (viewMode === "plate") {
         try {
-            const parsed = JSON.parse(rawDescription);
-            if (parsed && typeof parsed === "object" && "mode" in parsed) {
-                return parsed as ProblemDescription;
-            }
-            return { mode: "plate", content: JSON.parse(handleDeprecatedDescription(rawDescription)) };
+            baseDescription.plate = JSON.parse(handleDeprecatedDescription(rawDescription));
         } catch {
-            return { mode: "markdown", content: rawDescription };
+            baseDescription.plate = [];
         }
-    })();
+    }
 
     return {
         title: problem.title,
-        description: parsedDescription,
+        description: baseDescription,
         language: problem.language,
         solution: problem.solution,
         testcases: problem.testcases.map(testcase => testcase.input).join(":::\n"),

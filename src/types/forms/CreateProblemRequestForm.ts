@@ -8,11 +8,15 @@ export type ProblemGroupPermissionRequestForm = {
 	group: GroupModel
 } & ProblemPermissionRequestForm
 
-export type DescriptionMode = "markdown" | "plate";
+export type DescriptionMode = "markdown" | "plate" | "pdf";
 
-export type ProblemDescription =
-	| { mode: "markdown"; content: string }
-	| { mode: "plate"; content: PlateEditorValueType };
+export type ProblemDescription = {
+	mode: DescriptionMode;
+	markdown: string;
+	plate: PlateEditorValueType;
+	pdf: string | null;           // S3 key (sent to backend)
+	pdfPreviewUrl: string | null; // presigned URL (display only, never sent to backend)
+};
 
 export type CreateProblemRequestForm = {
 	title: string;

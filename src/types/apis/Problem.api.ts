@@ -12,6 +12,8 @@ export type CreateProblemRequest = {
 	title: string;
 	language: string;
 	description: string | null;
+	view_mode: "markdown" | "plate" | "pdf";
+	pdf_url: string | null;
 	solution: string;
 	testcases: string[];
 	time_limit: number;
@@ -119,4 +121,6 @@ export type ProblemServiceAPI = {
 	getPublic: (
 		problemId: string
 	) => Promise<AxiosResponse<ProblemPopulateCreatorSecureModel>>;
+	getPdfUrl: (problemId: string) => Promise<AxiosResponse<{ url: string }>>;
+	uploadPdf: (file: File) => Promise<AxiosResponse<{ key: string }>>;
 };

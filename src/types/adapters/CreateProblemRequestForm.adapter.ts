@@ -9,13 +9,20 @@ export const transformCreateProblemRequestForm2CreateProblemRequest = (
 	groups: ProblemGroupPermissionCreateRequest[]
 } => {
 
+	const { mode, markdown, plate, pdf } = createRequest.description;
+
+	const descriptionValue = (() => {
+		if (mode === "markdown") return markdown;
+		if (mode === "plate") return JSON.stringify(plate);
+		return pdf ?? "";
+	})();
+
 	const request = {
 		title: createRequest.title,
 		language: createRequest.language,
-		description: createRequest.description.mode === "markdown"
-			? createRequest.description.content
-			: JSON.stringify(createRequest.description.content),
-		description_mode: createRequest.description.mode,
+		description: descriptionValue,
+		view_mode: mode,
+		pdf_url: mode === "pdf" ? pdf : null,
 		solution: createRequest.solution,
 		testcases: testcaseParse(
 			createRequest.testcases,

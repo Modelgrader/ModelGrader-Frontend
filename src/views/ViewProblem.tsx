@@ -21,8 +21,13 @@ const ViewProblem = () => {
 		useState<GetSubmissionByAccountProblemResponse>()
 
 	useEffect(() => {
-		ProblemService.getPublic(String(problemId)).then((response) => {
-			setProblem(response.data);
+		ProblemService.getPublic(String(problemId)).then(async (response) => {
+			const problem = response.data;
+			if (problem.view_mode === 'pdf' && problem.pdf_url) {
+				const pdfUrlResponse = await ProblemService.getPdfUrl(String(problemId));
+				problem.pdf_presigned_url = pdfUrlResponse.data.url;
+			}
+			setProblem(problem);
 		});
 
 		SubmissionService.getByAccountProblem(

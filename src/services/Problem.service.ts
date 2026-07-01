@@ -42,4 +42,16 @@ export const ProblemService: ProblemServiceAPI = {
     getPublic: async (problemId) => {
         return apiClient.get<ProblemPopulateCreatorSecureModel>(`/api/problems/${problemId}`);
     },
+
+    getPdfUrl: async (problemId: string) => {
+        return apiClient.get<{ url: string }>(`/api/problems/${problemId}/pdf/url`);
+    },
+
+    uploadPdf: async (file: File) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        return apiClient.post<{ key: string }>(`/api/upload/pdf`, formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+        });
+    },
 }

@@ -10,7 +10,7 @@ import { CreateProblemRequestForm } from "@/types/forms/CreateProblemRequestForm
 
 const formInitialValue: CreateProblemRequestForm = {
 	title: "",
-	description: { mode: "plate", content: [] },
+	description: { mode: "plate", markdown: "", plate: [], pdf: null, pdfPreviewUrl: null },
 	language: "python",
 	solution: "",
 	testcases: "",

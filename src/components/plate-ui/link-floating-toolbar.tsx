@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import {
   flip,
   offset,
@@ -140,7 +141,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
       <div
         ref={insertRef}
         className={cn(popoverVariants(), 'w-auto p-1')}
-        {...insertProps}
+        {...(insertProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {input}
       </div>
@@ -148,7 +149,7 @@ export function LinkFloatingToolbar({ state }: LinkFloatingToolbarProps) {
       <div
         ref={editRef}
         className={cn(popoverVariants(), 'w-auto p-1')}
-        {...editProps}
+        {...(editProps as React.HTMLAttributes<HTMLDivElement>)}
       >
         {editContent}
       </div>

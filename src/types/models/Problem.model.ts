@@ -16,6 +16,9 @@ export type ProblemModel = {
     language: string
     title: string
     description: string | null
+    view_mode: "markdown" | "plate" | "pdf"
+    pdf_url: string | null
+    pdf_presigned_url?: string | null
     solution: string
     time_limit: number
     is_active: boolean
@@ -36,6 +39,9 @@ export type ProblemSecureModel = {
     language: string
     title: string
     description: string
+    view_mode: "markdown" | "plate" | "pdf"
+    pdf_url: string | null
+    pdf_presigned_url?: string | null
     time_limit: string
     created_date: string
     updated_date: string
