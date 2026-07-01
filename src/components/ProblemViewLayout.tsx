@@ -152,8 +152,8 @@ const ProblemViewLayout = ({
 
     return (
         <ResizablePanelGroup direction="horizontal" className="flex xxl:mt-10 md:mt-5 h-[80vh] xl:h-[90vh]">
-            <ResizablePanel defaultSize={50} className="w-1/2 grid content-between">
-                <div className="ml-3 ">
+            <ResizablePanel defaultSize={50} className="w-1/2" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <div className="ml-3 shrink-0">
                     <Breadcrumb className="mb-2">
                         <BreadcrumbList>
                             <BreadcrumbItem>
@@ -201,17 +201,17 @@ const ProblemViewLayout = ({
 						</div> */}
                     </div>
                 </div>
-                <div className="mt-[8px] mb-[16px]">
+                <div className="mt-[8px] mb-[16px] shrink-0">
                     <Separator orientation="horizontal" />
                 </div>
-                <div className="flex-1 overflow-auto">
+                <div style={{ flex: '1 1 0', overflowY: 'auto', minHeight: 0 }}>
                     {problem && problem.view_mode === 'markdown' && (
-                        <div data-color-mode="dark">
+                        <MarkdownWrapper data-color-mode="dark">
                             <MDEditor.Markdown
                                 source={String(problem.description)}
                                 style={{ background: 'transparent', padding: '8px 0' }}
                             />
-                        </div>
+                        </MarkdownWrapper>
                     )}
                     {problem && (problem.view_mode === 'plate' || !problem.view_mode) && (
                         <ReadOnlyPlate
@@ -324,6 +324,32 @@ const ProblemViewLayout = ({
         </ResizablePanelGroup>
     );
 };
+
+const MarkdownWrapper = styled.div`
+    .wmde-markdown,
+    .wmde-markdown-color {
+        color: #1f2937 !important;
+    }
+
+    .wmde-markdown h1, .wmde-markdown h2, .wmde-markdown h3,
+    .wmde-markdown h4, .wmde-markdown h5, .wmde-markdown h6,
+    .wmde-markdown p, .wmde-markdown li, .wmde-markdown td,
+    .wmde-markdown-color h1, .wmde-markdown-color h2, .wmde-markdown-color h3,
+    .wmde-markdown-color p, .wmde-markdown-color li {
+        color: #1f2937 !important;
+    }
+
+    .wmde-markdown code:not(pre code),
+    .wmde-markdown-color code:not(pre code) {
+        color: #f87171 !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .wmde-markdown pre code,
+    .wmde-markdown-color pre code {
+        color: #ffffff !important;
+    }
+`;
 
 const MonacoEditorWrapper = styled.div`
     height: 80vh;
