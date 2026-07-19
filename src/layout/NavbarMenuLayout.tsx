@@ -15,7 +15,7 @@ export const NavbarMenuLayout = ({
             <div className="z-50 fixed w-full">
                 <NavigationBar />
             </div>
-            <div className={`flex-1 overflow-hidden ${yPad ? 'pt-10' : ''} ${xPad ? 'pl-10' : ''}`}>{children}</div>
+            <div className={`flex-1 overflow-y-auto overflow-x-hidden ${yPad ? 'pt-10' : ''} ${xPad ? 'pl-10' : ''}`}>{children}</div>
         </div>
     );
 };
