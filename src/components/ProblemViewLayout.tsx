@@ -64,6 +64,7 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { TopicModel } from '@/types/models/Topic.model';
+import { MONACO_EDITOR_OPTIONS } from "@/lib/fonts"
 
 export type OnSubmitProblemViewLayoutCallback = {
     setGrading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -274,6 +275,7 @@ const ProblemViewLayout = ({
                             theme="vs-dark"
                             // defaultLanguage="python"
                             language={selectedLanguage}
+                            options={MONACO_EDITOR_OPTIONS}
                         />
                     </MonacoEditorWrapper>
                 </div>

@@ -6,6 +6,7 @@ import TestcaseValidationAccordian from "../TestcaseValidationAccordion";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/shadcn/Dialog";
 import { ScrollArea } from "@/components/shadcn/ScrollArea";
 import { Separator } from "@/components/shadcn/Seperator";
+import { MONACO_EDITOR_OPTIONS } from "@/lib/fonts"
 
 const ProblemSubmissionSourceCodeAndRuntimeResultDialog = ({
 	submission,
@@ -34,6 +35,7 @@ const ProblemSubmissionSourceCodeAndRuntimeResultDialog = ({
 								setSourceCode(submission.submission_code)
 							}
 							language={submission.language}
+							options={MONACO_EDITOR_OPTIONS}
 						/>
 					</div>
 

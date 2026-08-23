@@ -37,7 +37,7 @@
 
 
 .homepage-btn {
-  font-family: monospace;
+  font-family: var(--font-mono);
   padding: 20px;
   font-size: 40px;
 }
@@ -85,7 +85,7 @@
 }
 
 .input-code {
-  font-family: monospace !important;
+  font-family: var(--font-mono) !important;
   color: rgb(0, 39, 99) !important;
   font-size: 20px !important;
 }

@@ -2,12 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-	/* font-family: "Anuphan", sans-serif, monospace; */
-}
-
 @layer base {
 	:root {
+		/* Latin from IBM Plex Sans, Thai falls through to Anuphan.
+		   See src/lib/fonts.ts */
+		--font-sans: "IBM Plex Sans", "Anuphan", ui-sans-serif, system-ui,
+			-apple-system, "Segoe UI", sans-serif;
+		--font-mono: "JetBrains Mono", "Anuphan", ui-monospace, SFMono-Regular,
+			Menlo, Consolas, monospace;
+
 		--background: 0 0% 100%;
 		--foreground: 240 10% 3.9%;
 		--card: 0 0% 100%;
@@ -73,7 +76,50 @@
 	* {
 		@apply border-border;
 	}
-	body {
-		@apply bg-background text-foreground;
+	html {
+		font-family: var(--font-sans);
 	}
+	body {
+		@apply bg-background text-foreground font-sans;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	/* Form controls do not inherit the document font by default. */
+	input,
+	textarea,
+	select,
+	button {
+		font-family: inherit;
+	}
+	code,
+	kbd,
+	samp,
+	pre {
+		font-family: var(--font-mono);
+		font-variant-ligatures: none;
+	}
+}
+
+/*
+ * Third-party editors ship their own font stacks; pull them back onto ours.
+ * Outside @layer base so these win over the vendor stylesheets.
+ */
+.w-md-editor,
+.w-md-editor-preview,
+.wmde-markdown {
+	font-family: var(--font-sans);
+}
+
+.w-md-editor-text-input,
+.w-md-editor-text-pre,
+.w-md-editor-text-pre > code,
+.wmde-markdown code,
+.wmde-markdown pre {
+	font-family: var(--font-mono) !important;
+}
+
+.slate-code_block,
+.slate-code_line,
+[data-slate-editor] code {
+	font-family: var(--font-mono);
 }

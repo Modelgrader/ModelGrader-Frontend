@@ -12,6 +12,7 @@ import { Combobox } from "@/components/shadcn/Combobox";
 import { Input } from "@/components/shadcn/Input";
 import { Label } from "@/components/shadcn/Label";
 import { Separator } from "@/components/shadcn/Seperator";
+import { MONACO_EDITOR_OPTIONS } from "@/lib/fonts"
 
 const Scoring = ({
 	createRequest,
@@ -93,6 +94,7 @@ const Scoring = ({
 						})
 					}
 					language={createRequest.language}
+					options={MONACO_EDITOR_OPTIONS}
 				/>
 
 				<div className="my-1 flex justify-between items-center">
@@ -124,6 +126,7 @@ const Scoring = ({
 					theme="vs-dark"
 					height="35vh"
 					defaultLanguage="python"
+					options={MONACO_EDITOR_OPTIONS}
 				/>
 			</div>
 			<div className="">

@@ -12,6 +12,7 @@ import { Combobox } from "@/components/shadcn/Combobox";
 import { Input } from "@/components/shadcn/Input";
 import { Label } from "@/components/shadcn/Label";
 import { Separator } from "@/components/shadcn/Seperator";
+import { MONACO_EDITOR_OPTIONS } from "@/lib/fonts"
 
 const SolutionSection = ({
 	createRequest,
@@ -64,7 +65,7 @@ const SolutionSection = ({
 						value={createRequest.solution}
 						onChange={(e) => setCreateRequest({ ...createRequest, solution: String(e) })}
 						language={createRequest.language}
-						options={{ minimap: { enabled: false } }}
+						options={{ ...MONACO_EDITOR_OPTIONS, minimap: { enabled: false } }}
 					/>
 				</div>
 
@@ -86,7 +87,7 @@ const SolutionSection = ({
 						theme="vs-dark"
 						height="30vh"
 						defaultLanguage="plaintext"
-						options={{ minimap: { enabled: false }, lineNumbers: "off" }}
+						options={{ ...MONACO_EDITOR_OPTIONS, minimap: { enabled: false }, lineNumbers: "off" }}
 					/>
 				</div>
 			</div>
