@@ -16,6 +16,8 @@ export type CreateProblemRequest = {
 	pdf_url: string | null;
 	solution: string;
 	testcases: string[];
+	/** 0-based indexes into `testcases` that solvers are allowed to see. */
+	shown_testcases: number[];
 	time_limit: number;
 	allowed_languages: string;
 };
@@ -26,6 +28,7 @@ export type UpdateProblemRequest = {
 	description?: string;
 	solution?: string;
 	testcases?: string[];
+	shown_testcases?: number[];
 	time_limit?: number;
 };
 

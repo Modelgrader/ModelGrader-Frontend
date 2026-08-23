@@ -17,6 +17,11 @@ export const transformCreateProblemRequestForm2CreateProblemRequest = (
 		return pdf ?? "";
 	})();
 
+	const testcases = testcaseParse(
+		createRequest.testcases,
+		createRequest.testcase_delimeter
+	);
+
 	const request = {
 		title: createRequest.title,
 		language: createRequest.language,
@@ -24,9 +29,10 @@ export const transformCreateProblemRequestForm2CreateProblemRequest = (
 		view_mode: mode,
 		pdf_url: mode === "pdf" ? pdf : null,
 		solution: createRequest.solution,
-		testcases: testcaseParse(
-			createRequest.testcases,
-			createRequest.testcase_delimeter
+		testcases,
+		// Drop stale indexes left behind after testcases were removed from the editor.
+		shown_testcases: (createRequest.shown_testcases ?? []).filter(
+			(index) => index < testcases.length
 		),
 		time_limit: createRequest.time_limit,
 		allowed_languages: createRequest.allowedLanguage.filter((language) => language !== "").join(","),

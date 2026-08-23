@@ -1,4 +1,4 @@
-import { FileDown } from "lucide-react";
+import { Eye, EyeOff, FileDown } from "lucide-react";
 import { RuntimeResult } from "@/types/apis/Problem.api";
 import { TestcaseModel } from "@/types/models/Problem.model";
 import { convertToSnakeCase } from "@/utilities/String";
@@ -10,6 +10,7 @@ import {
 } from "./shadcn/Accordion";
 import { Badge } from "./shadcn/Badge";
 import { Label } from "./shadcn/Label";
+import { Switch } from "./shadcn/Switch";
 import RuntimeOutputTextarea from "./Textareas/RuntimeOutputTextarea";
 
 const minimizer = (text: string | null): string => {
@@ -47,6 +48,8 @@ const TestcaseValidationInstance = ({
 	expectedOutputValue,
 	status,
 	index,
+	isShown,
+	onToggleShown,
 }: {
 	problem: {
 		title: string;
@@ -57,6 +60,8 @@ const TestcaseValidationInstance = ({
 	expectedOutputValue: string | null;
 	status: string;
 	index: number;
+	isShown?: boolean;
+	onToggleShown?: (index: number, shown: boolean) => void;
 }) => {
 	// const [inputValue, setInputValue] = useState("1 2 3");
 	// const [outputValue, setOutputValue] = useState("Hello World!");
@@ -80,18 +85,44 @@ const TestcaseValidationInstance = ({
 
 	return (
 		<AccordionItem value={value}>
-			<AccordionTrigger>
-				Testcase #{value}
-				{status === "OK" ? (
-					<Badge className="bg-green-500">OK</Badge>
-				) : status === "ERROR" ? (
-					<Badge className="bg-gray-500">ERROR</Badge>
-				) : status === "TIMEOUT" ? (
-					<Badge className="bg-yellow-400">TIMEOUT</Badge>
-				) : (
-					<Badge className="bg-red-400">FAILED</Badge>
+			<div className="flex items-center gap-3">
+				<div className="flex-1 min-w-0">
+					<AccordionTrigger>
+						Testcase #{value}
+						{status === "OK" ? (
+							<Badge className="bg-green-500">OK</Badge>
+						) : status === "ERROR" ? (
+							<Badge className="bg-gray-500">ERROR</Badge>
+						) : status === "TIMEOUT" ? (
+							<Badge className="bg-yellow-400">TIMEOUT</Badge>
+						) : (
+							<Badge className="bg-red-400">FAILED</Badge>
+						)}
+					</AccordionTrigger>
+				</div>
+				{onToggleShown && (
+					<div className="flex items-center gap-2 shrink-0 pl-3">
+						<Label
+							htmlFor={`testcase-shown-${index}`}
+							className="flex items-center gap-1 text-xs text-muted-foreground cursor-pointer"
+						>
+							{isShown ? (
+								<Eye size={14} className="text-green-500" />
+							) : (
+								<EyeOff size={14} />
+							)}
+							Show
+						</Label>
+						<Switch
+							id={`testcase-shown-${index}`}
+							checked={Boolean(isShown)}
+							onCheckedChange={(checked) =>
+								onToggleShown(index, checked)
+							}
+						/>
+					</div>
 				)}
-			</AccordionTrigger>
+			</div>
 			<AccordionContent>
 				<div className="ml-2">
 					<div className="gap-5 px-1 flex">
@@ -174,12 +205,17 @@ const TestcaseValidationInstance = ({
 const TestcaseValidationAccordian = ({
 	problem,
 	runtimeResults = [],
+	shownIndexes,
+	onToggleShown,
 }: {
 	problem: {
 		title: string;
 		testcases: TestcaseModel[];
 	};
 	runtimeResults?: RuntimeResult[] | TestcaseModel[];
+	/** Pass together with `onToggleShown` to render the per-testcase visibility switch. */
+	shownIndexes?: number[];
+	onToggleShown?: (index: number, shown: boolean) => void;
 }) => {
 	return (
 		<Accordion type="multiple">
@@ -199,6 +235,8 @@ const TestcaseValidationAccordian = ({
 					status={
 						result.runtime_status ? result.runtime_status : "OK"
 					}
+					isShown={shownIndexes?.includes(index)}
+					onToggleShown={onToggleShown}
 				/>
 			))}
 		</Accordion>

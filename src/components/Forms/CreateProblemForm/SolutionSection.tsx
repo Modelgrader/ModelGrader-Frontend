@@ -30,6 +30,18 @@ const SolutionSection = ({
 		if (createRequest.language) setSelectedLanguage(createRequest.language);
 	}, [createRequest.language]);
 
+	const handleToggleShown = (index: number, shown: boolean) => {
+		setCreateRequest((prev) => {
+			const current = prev.shown_testcases ?? [];
+			return {
+				...prev,
+				shown_testcases: shown
+					? [...current, index].sort((a, b) => a - b)
+					: current.filter((i) => i !== index),
+			};
+		});
+	};
+
 	const handleValidation = () => {
 		if (!selectedLanguage) return;
 		setLoading(true);
@@ -95,7 +107,12 @@ const SolutionSection = ({
 			<Separator orientation="vertical" className="mx-3" />
 
 			<div className="w-1/2 flex flex-col min-h-0">
-				<Label className="text-base font-semibold mb-3">Validation Results</Label>
+				<div className="flex items-baseline justify-between mb-3">
+					<Label className="text-base font-semibold">Validation Results</Label>
+					<span className="text-xs text-muted-foreground">
+						Toggle "Show" to reveal a testcase to solvers
+					</span>
+				</div>
 				<div className="flex-1 overflow-y-auto pr-1">
 					{((displayResult && validationResult) || createRequest.validated_testcases) && (
 						<TestcaseValidationAccordion
@@ -105,6 +122,8 @@ const SolutionSection = ({
 									? validationResult.runtime_results
 									: createRequest.validated_testcases
 							}
+							shownIndexes={createRequest.shown_testcases ?? []}
+							onToggleShown={handleToggleShown}
 						/>
 					)}
 					{!displayResult && !createRequest.validated_testcases && (

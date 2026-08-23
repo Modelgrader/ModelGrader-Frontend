@@ -9,6 +9,14 @@ export type TestcaseModel = {
     output: string | null
     problem: number
     runtime_status: string
+    is_shown?: boolean
+}
+
+/** Testcase the creator marked visible to solvers — exposed on the public problem endpoint. */
+export type ShownTestcaseModel = {
+    testcase_id: string
+    input: string
+    output: string | null
 }
 
 export type ProblemModel = {
@@ -26,6 +34,7 @@ export type ProblemModel = {
     submission_regex: string
     creator: AccountModel
     testcases: TestcaseModel[]
+    shown_testcases?: ShownTestcaseModel[]
     created_date: string;
     updated_date: string;
     allowed_languages: string
@@ -48,6 +57,7 @@ export type ProblemSecureModel = {
     allowed_languages: string
     creator: string
     difficulty: number;
+    shown_testcases?: ShownTestcaseModel[]
 }
 
 export type ProblemPopulateCreatorSecureModel = ProblemSecureModel & {

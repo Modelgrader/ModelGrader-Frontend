@@ -25,6 +25,8 @@ export type CreateProblemRequestForm = {
 	solution: string;
 	testcases: string;
 	testcase_delimeter: string;
+	/** 0-based indexes of the testcases the creator chose to reveal to solvers. */
+	shown_testcases: number[];
 	time_limit: number;
 	validated_testcases?: TestcaseModel[];
 	groupPermissions: ProblemGroupPermissionRequestForm[];
