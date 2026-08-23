@@ -15,6 +15,7 @@ const formInitialValue: CreateProblemRequestForm = {
 	solution: "",
 	testcases: "",
 	testcase_delimeter: ":::",
+	shown_testcases: [],
 	time_limit: 1.5,
 	groupPermissions: [],
 	allowedLanguage: [],

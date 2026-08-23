@@ -31,6 +31,10 @@ export function transformProblemPopulateAccountAndTestcasesAndProblemGroupPermis
         solution: problem.solution,
         testcases: problem.testcases.map(testcase => testcase.input).join(":::\n"),
         testcase_delimeter: ":::",
+        shown_testcases: problem.testcases.reduce<number[]>((indexes, testcase, index) => {
+            if (testcase.is_shown) indexes.push(index);
+            return indexes;
+        }, []),
         time_limit: problem.time_limit,
         groupPermissions: problem.group_permissions.map((permission) => ({
             groupId: permission.group.group_id,

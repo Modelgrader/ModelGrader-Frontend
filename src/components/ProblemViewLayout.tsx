@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import { ProgrammingLanguageOptions } from '../constants/ProgrammingLanguage';
 import PreviousSubmissionsCombobox from './PreviousSubmissionsCombobox';
 import ReadOnlyPlate from './ReadOnlyPlate';
+import SampleTestcasesSection from './SampleTestcasesSection';
 import TestcasesGradingIndicator from './TestcasesGradingIndicator';
 import { Button } from './shadcn/Button';
 import { Combobox } from './shadcn/Combobox';
@@ -231,6 +232,12 @@ const ProblemViewLayout = ({
                                 </div>
                             )}
                         </div>
+                    )}
+                    {problem && (
+                        <SampleTestcasesSection
+                            problemTitle={problem.title}
+                            testcases={problem.shown_testcases ?? []}
+                        />
                     )}
                 </div>
             </ResizablePanel>
