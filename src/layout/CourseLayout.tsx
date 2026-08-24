@@ -17,8 +17,10 @@ const CourseLayout = ({ children }: { children: React.ReactNode }) => {
     }, [isOpenSidebar])
 
     return (
-        <SidebarProvider open={isOpenSidebar}>
-            <div className='w-full'>{children}</div>
+        // onOpenChange is what lets the rail, the footer toggle and Ctrl+B actually
+        // move a controlled sidebar — without it `open` was a one-way prop.
+        <SidebarProvider open={isOpenSidebar} onOpenChange={setIsOpenSidebar}>
+            <div className="w-full">{children}</div>
         </SidebarProvider>
     );
 };
